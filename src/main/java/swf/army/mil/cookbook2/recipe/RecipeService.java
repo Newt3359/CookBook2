@@ -32,8 +32,8 @@ public class RecipeService {
         return recipeRepository.findAll();
     }
 
-    public Recipe getRecipeById(){
-        return test;
+    public Recipe getRecipeById(Long id){
+        return recipeRepository.findById(id).orElse(null);
     }
 
     public void deleteRecipe(Long id){

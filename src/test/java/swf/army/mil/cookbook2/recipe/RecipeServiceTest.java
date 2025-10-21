@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -47,5 +48,13 @@ class RecipeServiceTest {
 
         verify(recipeRepository, times(1)).findAll();
         assertThat(recipeList).isEqualTo(recipes);
+    }
+
+    @Test
+    void shouldGetRecipeById(){
+        when(recipeRepository.findById(1L)).thenReturn(Optional.of(test));
+
+        Recipe singleRecipe = recipeService.getRecipeById(1L);
+        assertThat(singleRecipe).isEqualTo(test);
     }
 }

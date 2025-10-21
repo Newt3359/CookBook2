@@ -87,7 +87,7 @@ class RecipeControllerTest {
     @Test
     public void shouldGetRecipeById() throws Exception{
         test.setId(1L);
-        Mockito.when(recipeService.getRecipeById()).thenReturn(test);
+        Mockito.when(recipeService.getRecipeById(1L)).thenReturn(test);
         mvc.perform(MockMvcRequestBuilders
                 .get("/api/recipe/1"))
                 .andExpect(status().isOk())

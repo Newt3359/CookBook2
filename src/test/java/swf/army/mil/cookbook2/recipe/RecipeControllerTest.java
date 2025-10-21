@@ -23,7 +23,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(RecipeController.class)
 @AutoConfigureMockMvc
 class RecipeControllerTest {
 

@@ -37,4 +37,12 @@ public Recipe getByID(@PathVariable Long id){
     return test;
 }
 
+@PutMapping("/{id}")
+public Recipe UpdateById(@PathVariable Long id){
+    test.setId(1L);
+    test.setIngredients("Tortillas, meat, and cheese");
+    test.setFavorite(false);
+    return test;
+}
+
 }

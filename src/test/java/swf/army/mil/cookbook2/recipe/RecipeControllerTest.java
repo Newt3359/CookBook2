@@ -96,7 +96,9 @@ class RecipeControllerTest {
                 .put("/api/recipe/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(updatedRecipe))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ingredients").value("Tortillas, meat, and cheese"))
+                .andExpect(jsonPath("$.favorite").value(false));
 
     }
 }

@@ -99,6 +99,21 @@ class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ingredients").value("Tortillas, meat, and cheese"))
                 .andExpect(jsonPath("$.favorite").value(false));
+    }
 
+    @Test
+    public void shouldUpdateIngredients()throws Exception{
+        Recipe existing = new Recipe();
+        existing.setId(2L);
+        existing.setTitle("Soup");
+        existing.setMealTypes(Set.of(MealType.Lunch, MealType.Dinner));
+        existing.setFavorite(false);
+
+
+        mvc.perform(MockMvcRequestBuilders.patch("/api/recipe/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"ingredients\": \"noodles, beef, broth\"}"))
+                .andExpect(status().isOk());
+//                .andExpect(jsonPath("$.ingredients").value("noodles, beef, broth"));
     }
 }

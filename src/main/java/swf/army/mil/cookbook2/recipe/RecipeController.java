@@ -38,7 +38,7 @@ public Recipe getByID(@PathVariable Long id){
 }
 
 @PutMapping("/{id}")
-public Recipe UpdateById(@PathVariable Long id){
+public Recipe UpdateById(@PathVariable Long id, @RequestBody Recipe recipe){
     test.setId(1L);
     test.setIngredients("Tortillas, meat, and cheese");
     test.setFavorite(false);

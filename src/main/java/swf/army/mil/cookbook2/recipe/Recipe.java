@@ -2,6 +2,7 @@ package swf.army.mil.cookbook2.recipe;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.Set;
 
 @Entity
@@ -25,15 +26,24 @@ public class Recipe{
     @Column (name = "meal_type")
     private Set<MealType> mealTypes;
 
+    private Double rating;
+
+    private Integer timesMade;
+
+    private Instant lastChange;
+
     private boolean favorite;
 
     public Recipe() {
     }
 
-    public Recipe(String title, String ingredients, Set<MealType> mealTypes, boolean favorite) {
+    public Recipe(String title, String ingredients, Set<MealType> mealTypes, Double rating, Integer timesMade, Instant lastChange, boolean favorite) {
         this.title = title;
         this.ingredients = ingredients;
         this.mealTypes = mealTypes;
+        this.rating = rating;
+        this.timesMade = timesMade;
+        this.lastChange = lastChange;
         this.favorite = favorite;
     }
 
@@ -67,6 +77,30 @@ public class Recipe{
 
     public void setMealTypes(Set<MealType> mealTypes) {
         this.mealTypes = mealTypes;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Integer getTimeMade() {
+        return timesMade;
+    }
+
+    public void setTimeMade(Integer timeMade) {
+        this.timesMade = timeMade;
+    }
+
+    public Instant getLastChange() {
+        return lastChange;
+    }
+
+    public void setLastChange(Instant lastChange) {
+        this.lastChange = lastChange;
     }
 
     public boolean isFavorite() {

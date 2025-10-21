@@ -12,6 +12,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -38,8 +41,9 @@ class RecipeControllerTest {
     private ObjectMapper mapper;
 
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), true);
-    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), false);
+    Instant time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
+    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), 4.5, 10, time, true);
+    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), 3.2, 2, time, false);
 
     @BeforeEach
     void setup(){
@@ -91,7 +95,7 @@ class RecipeControllerTest {
 
     @Test
     public void shouldUpdateRecipeById() throws Exception{
-        Recipe updated = new Recipe("Taco", "Tortillas, meat, and cheese", Set.of(MealType.Lunch, MealType.Dinner), false);
+        Recipe updated = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), 4.5, 10, time, true);
         String updatedRecipe = mapper.writeValueAsString(updated);
 
         mvc.perform(MockMvcRequestBuilders

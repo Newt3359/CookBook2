@@ -2,6 +2,9 @@ package swf.army.mil.cookbook2.recipe;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -10,8 +13,10 @@ import java.util.Set;
 public class RecipeController {
 
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), true);
-    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), false);
+    Instant time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
+    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), 4.5, 10, time, true);
+    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), 3.2, 2, time, false);
+
 
     private final RecipeService recipeService;
 

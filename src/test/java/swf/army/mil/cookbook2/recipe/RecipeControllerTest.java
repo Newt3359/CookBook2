@@ -63,12 +63,12 @@ class RecipeControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.title").value("Taco"))
-                .andExpect(jsonPath("$.ingredients").value("Tortillas and meat"))
+                .andExpect(jsonPath("$.ingredients").value("Tortillas, meat, and cheese"))
                 .andExpect(jsonPath("$.mealTypes", hasItems("Lunch", "Dinner")))
                 .andExpect(jsonPath("$.rating").value(4.5))
                 .andExpect(jsonPath("$.timesMade"). value(10))
 //                .andExpect(jsonPath("$.lastChange").value(time))
-                .andExpect(jsonPath("$.favorite").value(true));
+                .andExpect(jsonPath("$.favorite").value(false));
     }
 
     @Test

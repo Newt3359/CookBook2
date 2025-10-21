@@ -79,6 +79,9 @@ public class RecipeService {
     }
 
     public void deleteRecipe(Long id){
-
+        if (!recipeRepository.existsById(id)){
+            System.out.println("not found");
+        }
+        recipeRepository.deleteById(id);
     }
 }

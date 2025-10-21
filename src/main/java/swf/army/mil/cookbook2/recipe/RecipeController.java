@@ -1,21 +1,16 @@
 package swf.army.mil.cookbook2.recipe;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/recipe")
 public class RecipeController {
 
-    private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-    Instant time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
-    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), 4.5, 10, time, true);
-    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), 3.2, 2, time, false);
+//    private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+//    Instant time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
+//    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), 4.5, 10, time, true);
+//    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), 3.2, 2, time, false);
 
 
     private final RecipeService recipeService;
@@ -26,39 +21,33 @@ public class RecipeController {
 
     @PostMapping
     public Recipe saveRecipe(@RequestBody Recipe recipe){
-        test.setId(1L);
-        return test;
+
+        return recipeService.saveRecipe(recipe);
     }
 
     @GetMapping
-    public ArrayList<Recipe> getAll (){
-        recipes.add(test);
-        recipes.add(test2);
-        return recipes;
+    public List<Recipe> getAll (){
+        return recipeService.getAll();
     }
 
     @GetMapping("/{id}")
     public Recipe getByID(@PathVariable Long id){
-        test.setId(1L);
-        return test;
+        return recipeService.getRecipeById(id);
     }
 
     @PutMapping("/{id}")
     public Recipe UpdateById(@PathVariable Long id, @RequestBody Recipe recipe){
-        test.setId(1L);
-        test.setIngredients("Tortillas, meat, and cheese");
-        test.setFavorite(false);
-        return test;
+       return recipeService.updateById(id,recipe);
     }
 
     @PatchMapping("/{id}")
     public Recipe partialUpdate (@PathVariable Long id, @RequestBody Recipe recipe){
-        test2.setIngredients("noodles, beef, broth");
-        return test2;
+        return recipeService.partialUpdate(id,recipe);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRecipe(@PathVariable Long id){
+        recipeService.deleteRecipe(id);
         return ResponseEntity.noContent().build();
     }
 

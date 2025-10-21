@@ -78,4 +78,11 @@ class RecipeServiceTest {
 
         assertThat(updatedRecipe.getIngredients()).isEqualTo("new ingredients");
     }
+
+    @Test
+    void shouldDeleteRecipe(){
+        recipeService.deleteRecipe(1L);
+
+        verify(recipeRepository, times(1)).deleteById(1L);
+    }
 }

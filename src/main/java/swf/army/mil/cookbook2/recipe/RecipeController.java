@@ -1,8 +1,5 @@
 package swf.army.mil.cookbook2.recipe;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -11,9 +8,10 @@ import java.util.ArrayList;
 public class RecipeController {
 
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-    Recipe test = new Recipe(1L, "Taco", "Tortillas and meat", true);
+    Recipe test = new Recipe("Taco", "Tortillas and meat", true);
+    Recipe test2 = new Recipe("Soup", "Chicken Noodle", false);
 
-private final RecipeService recipeService;
+    private final RecipeService recipeService;
 
 public RecipeController(RecipeService recipeService){
     this.recipeService = recipeService;
@@ -21,7 +19,15 @@ public RecipeController(RecipeService recipeService){
 
 @PostMapping
 public Recipe saveRecipe(@RequestBody Recipe recipe){
+    test.setId(1L);
     return test;
+}
+
+@GetMapping
+public ArrayList<Recipe> getAll (){
+    recipes.add(test);
+    recipes.add(test2);
+    return recipes;
 }
 
 }

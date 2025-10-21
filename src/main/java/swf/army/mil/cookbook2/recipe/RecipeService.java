@@ -13,4 +13,8 @@ public class RecipeService {
         recipes.add(recipe);
         return recipe;
     }
+
+    public ArrayList<Recipe> getAll(){
+        return recipes;
+    }
 }

@@ -21,8 +21,7 @@ public class Recipe {
     public Recipe() {
     }
 
-    public Recipe(Long id, String title, String ingredients, boolean favorite) {
-        this.id = id;
+    public Recipe(String title, String ingredients, boolean favorite) {
         this.title = title;
         this.ingredients = ingredients;
         this.favorite = favorite;

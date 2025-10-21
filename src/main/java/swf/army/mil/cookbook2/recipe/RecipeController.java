@@ -1,4 +1,5 @@
 package swf.army.mil.cookbook2.recipe;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,41 +15,46 @@ public class RecipeController {
 
     private final RecipeService recipeService;
 
-public RecipeController(RecipeService recipeService){
-    this.recipeService = recipeService;
-}
+    public RecipeController(RecipeService recipeService){
+        this.recipeService = recipeService;
+    }
 
-@PostMapping
-public Recipe saveRecipe(@RequestBody Recipe recipe){
-    test.setId(1L);
-    return test;
-}
+    @PostMapping
+    public Recipe saveRecipe(@RequestBody Recipe recipe){
+        test.setId(1L);
+        return test;
+    }
 
-@GetMapping
-public ArrayList<Recipe> getAll (){
-    recipes.add(test);
-    recipes.add(test2);
-    return recipes;
-}
+    @GetMapping
+    public ArrayList<Recipe> getAll (){
+        recipes.add(test);
+        recipes.add(test2);
+        return recipes;
+    }
 
-@GetMapping("/{id}")
-public Recipe getByID(@PathVariable Long id){
-    test.setId(1L);
-    return test;
-}
+    @GetMapping("/{id}")
+    public Recipe getByID(@PathVariable Long id){
+        test.setId(1L);
+        return test;
+    }
 
-@PutMapping("/{id}")
-public Recipe UpdateById(@PathVariable Long id, @RequestBody Recipe recipe){
-    test.setId(1L);
-    test.setIngredients("Tortillas, meat, and cheese");
-    test.setFavorite(false);
-    return test;
-}
+    @PutMapping("/{id}")
+    public Recipe UpdateById(@PathVariable Long id, @RequestBody Recipe recipe){
+        test.setId(1L);
+        test.setIngredients("Tortillas, meat, and cheese");
+        test.setFavorite(false);
+        return test;
+    }
 
-@PatchMapping("/{id}")
-public Recipe partialUpdate (@PathVariable Long id, @RequestBody Recipe recipe){
-    test2.setIngredients("noodles, beef, broth");
-    return test2;
-}
+    @PatchMapping("/{id}")
+    public Recipe partialUpdate (@PathVariable Long id, @RequestBody Recipe recipe){
+        test2.setIngredients("noodles, beef, broth");
+        return test2;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRecipe(@PathVariable Long id){
+        return ResponseEntity.noContent().build();
+    }
 
 }

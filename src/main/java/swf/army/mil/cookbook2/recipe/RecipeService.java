@@ -1,6 +1,7 @@
 package swf.army.mil.cookbook2.recipe;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -24,5 +25,9 @@ public class RecipeService {
 
     public Recipe getRecipeById(){
         return test;
+    }
+
+    public void deleteRecipe(Long id){
+
     }
 }

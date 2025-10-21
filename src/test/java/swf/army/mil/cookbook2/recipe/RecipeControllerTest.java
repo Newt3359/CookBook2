@@ -18,6 +18,8 @@ import java.util.Set;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -115,5 +117,14 @@ class RecipeControllerTest {
                 .content("{\"ingredients\": \"noodles, beef, broth\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ingredients").value("noodles, beef, broth"));
+    }
+
+    @Test
+    public void shouldDeleteRecipe() throws Exception{
+        doNothing().when(recipeService).deleteRecipe(anyLong());
+
+        mvc.perform(MockMvcRequestBuilders
+                .delete("/api/recipe/2"))
+                .andExpect(status().isNoContent());
     }
 }

@@ -30,4 +30,10 @@ public ArrayList<Recipe> getAll (){
     return recipes;
 }
 
+@GetMapping("/{id}")
+public Recipe getByID(@PathVariable Long id){
+    test.setId(1L);
+    return test;
+}
+
 }

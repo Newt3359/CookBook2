@@ -61,9 +61,19 @@ class RecipeControllerTest {
         String testJson = mapper.writeValueAsString(recipes);
         Mockito.when(recipeService.getAll()).thenReturn(recipes);
         mvc.perform(MockMvcRequestBuilders
-                .get("/api/recipe")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(testJson))
-                .andExpect(status().is2xxSuccessful());
+                .get("/api/recipe"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*").isArray());
+//        Mockito.verify(recipeService).getAll();
+    }
+
+    @Test
+    public void shouldGetRecipeById() throws Exception{
+        test.setId(1L);
+        Mockito.when(recipeService.getRecipeById()).thenReturn(test);
+        mvc.perform(MockMvcRequestBuilders
+                .get("/api/recipe/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L));
     }
 }

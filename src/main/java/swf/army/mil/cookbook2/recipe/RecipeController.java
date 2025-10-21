@@ -45,4 +45,10 @@ public Recipe UpdateById(@PathVariable Long id, @RequestBody Recipe recipe){
     return test;
 }
 
+@PatchMapping("/{id}")
+public Recipe partialUpdate (@PathVariable Long id, @RequestBody Recipe recipe){
+    test2.setIngredients("noodles, beef, broth");
+    return test2;
+}
+
 }

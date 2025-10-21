@@ -113,7 +113,7 @@ class RecipeControllerTest {
         mvc.perform(MockMvcRequestBuilders.patch("/api/recipe/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"ingredients\": \"noodles, beef, broth\"}"))
-                .andExpect(status().isOk());
-//                .andExpect(jsonPath("$.ingredients").value("noodles, beef, broth"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ingredients").value("noodles, beef, broth"));
     }
 }

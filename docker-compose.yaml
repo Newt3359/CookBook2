@@ -1,0 +1,16 @@
+services:
+  postgres-db:
+    container_name: Bridge_App
+    image: postgres # use latest official postgres version
+    restart: always
+    environment:
+      POSTGRES_USER: cookbook_dev2
+      POSTGRES_PASSWORD: cookbook_dev12
+      POSTGRES_DB: Recipe
+      POSTGRES_HOST_AUTH_METHOD: password
+    ports:
+      - "5440:5432"
+
+volumes:
+  postgresql_data:
+    driver: local

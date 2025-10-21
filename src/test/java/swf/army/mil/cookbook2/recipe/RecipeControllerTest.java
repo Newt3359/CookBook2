@@ -1,6 +1,7 @@
 package swf.army.mil.cookbook2.recipe;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,16 @@ class RecipeControllerTest {
     Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), true);
     Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), false);
 
+    @BeforeEach
+    void setup(){
+        test.setId(1L);
+        test2.setId(2L);
+    }
+
+
+
     @Test
     public void shouldSaveRecipe()throws Exception{
-        test.setId(1L);
         Mockito.when(recipeService.saveRecipe(any(Recipe.class))).thenReturn(test);
         String testJson = mapper.writeValueAsString(test);
         mvc.perform(MockMvcRequestBuilders
@@ -57,8 +65,6 @@ class RecipeControllerTest {
 
     @Test
     public void shouldReturnAllRecipes()throws Exception{
-        test.setId(1L);
-        test2.setId(2L);
         recipes.add(test);
         recipes.add(test2);
         String testJson = mapper.writeValueAsString(recipes);
@@ -79,5 +85,18 @@ class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.mealTypes", hasItems("Lunch", "Dinner")));
+    }
+
+    @Test
+    public void shouldUpdateRecipeById() throws Exception{
+        Recipe updated = new Recipe("Taco", "Tortillas, meat, and cheese", Set.of(MealType.Lunch, MealType.Dinner), false);
+        String updatedRecipe = mapper.writeValueAsString(updated);
+
+        mvc.perform(MockMvcRequestBuilders
+                .put("/api/recipe/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updatedRecipe))
+                .andExpect(status().isOk());
+
     }
 }

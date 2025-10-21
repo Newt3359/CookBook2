@@ -45,6 +45,39 @@ public class RecipeService {
         return recipeRepository.save(recipe);
     }
 
+    public Recipe partialUpdate(Long id, Recipe recipe){
+        return recipeRepository.findById(id)
+                .map(existingRecipe -> {
+
+                    if (recipe.getTitle() != null){
+                        existingRecipe.setTitle(recipe.getTitle());
+                    }
+
+                    if (recipe.getIngredients() != null){
+                        existingRecipe.setIngredients(recipe.getIngredients());
+                    }
+
+                    if (recipe.getMealTypes() != null){
+                        existingRecipe.setMealTypes(recipe.getMealTypes());
+                    }
+
+                    if (recipe.getRating() != null){
+                        existingRecipe.setRating(recipe.getRating());
+                    }
+
+                    if (recipe.getTimesMade() != null){
+                        existingRecipe.setTimesMade(recipe.getTimesMade());
+                    }
+
+                    if (recipe.getLastChange() != null){
+                        existingRecipe.setLastChange(recipe.getLastChange());
+                    }
+
+                    return recipeRepository.save(existingRecipe);
+                })
+                .orElseThrow(() -> new RuntimeException("Not found"));
+    }
+
     public void deleteRecipe(Long id){
 
     }

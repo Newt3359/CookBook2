@@ -59,10 +59,23 @@ class RecipeServiceTest {
     }
 
     @Test
-    void shouldUpdateAircraftById(){
+    void shouldUpdateRecipeById(){
         when(recipeRepository.save(test)).thenReturn(test);
 
         Recipe updatedRecipe = recipeService.updateById(1L,test);
         assertThat(updatedRecipe).isEqualTo(test);
+    }
+
+    @Test
+    void shouldPartiallyUpdateRecipe(){
+        Recipe existing = test;
+        Recipe updated = new Recipe(null,"new ingredients", null, null,null, null, null);
+
+        when(recipeRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(recipeRepository.save(existing)).thenReturn(existing);
+
+        Recipe updatedRecipe = recipeService.partialUpdate(1L, updated);
+
+        assertThat(updatedRecipe.getIngredients()).isEqualTo("new ingredients");
     }
 }

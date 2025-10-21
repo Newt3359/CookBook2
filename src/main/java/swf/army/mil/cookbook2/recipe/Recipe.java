@@ -32,12 +32,12 @@ public class Recipe{
 
     private Instant lastChange;
 
-    private boolean favorite;
+    private Boolean favorite;
 
     public Recipe() {
     }
 
-    public Recipe(String title, String ingredients, Set<MealType> mealTypes, Double rating, Integer timesMade, Instant lastChange, boolean favorite) {
+    public Recipe(String title, String ingredients, Set<MealType> mealTypes, Double rating, Integer timesMade, Instant lastChange, Boolean favorite) {
         this.title = title;
         this.ingredients = ingredients;
         this.mealTypes = mealTypes;
@@ -107,7 +107,7 @@ public class Recipe{
         return favorite;
     }
 
-    public void setFavorite(boolean favorite) {
+    public void setFavorite(Boolean favorite) {
         this.favorite = favorite;
     }
 }

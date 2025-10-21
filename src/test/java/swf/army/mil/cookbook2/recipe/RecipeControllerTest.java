@@ -12,7 +12,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.Set;
 
+import static org.hamcrest.Matchers.hasItems;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -33,8 +35,8 @@ class RecipeControllerTest {
     private ObjectMapper mapper;
 
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-    Recipe test = new Recipe("Taco", "Tortillas and meat", true);
-    Recipe test2 = new Recipe("Soup", "Chicken Noodle", false);
+    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), true);
+    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), false);
 
     @Test
     public void shouldSaveRecipe()throws Exception{
@@ -49,6 +51,7 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.title").value("Taco"))
                 .andExpect(jsonPath("$.ingredients").value("Tortillas and meat"))
+                .andExpect(jsonPath("$.mealTypes", hasItems("Lunch", "Dinner")))
                 .andExpect(jsonPath("$.favorite").value(true));
     }
 
@@ -74,6 +77,7 @@ class RecipeControllerTest {
         mvc.perform(MockMvcRequestBuilders
                 .get("/api/recipe/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L));
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.mealTypes", hasItems("Lunch", "Dinner")));
     }
 }

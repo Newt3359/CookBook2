@@ -2,14 +2,15 @@ package swf.army.mil.cookbook2.recipe;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/recipe")
 public class RecipeController {
 
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-    Recipe test = new Recipe("Taco", "Tortillas and meat", true);
-    Recipe test2 = new Recipe("Soup", "Chicken Noodle", false);
+    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), true);
+    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), false);
 
     private final RecipeService recipeService;
 

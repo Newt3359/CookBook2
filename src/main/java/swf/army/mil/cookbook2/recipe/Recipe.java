@@ -1,12 +1,11 @@
 package swf.army.mil.cookbook2.recipe;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
-public class Recipe {
+public class Recipe{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,14 +15,25 @@ public class Recipe {
 
     private String ingredients;
 
+
+    @ElementCollection(targetClass = MealType.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(
+            name = "recipe_meal_types",
+            joinColumns = @JoinColumn(name = "recipe_id")
+    )
+    @Column (name = "meal_type")
+    private Set<MealType> mealTypes;
+
     private boolean favorite;
 
     public Recipe() {
     }
 
-    public Recipe(String title, String ingredients, boolean favorite) {
+    public Recipe(String title, String ingredients, Set<MealType> mealTypes, boolean favorite) {
         this.title = title;
         this.ingredients = ingredients;
+        this.mealTypes = mealTypes;
         this.favorite = favorite;
     }
 
@@ -49,6 +59,14 @@ public class Recipe {
 
     public void setIngredients(String ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public Set<MealType> getMealTypes() {
+        return mealTypes;
+    }
+
+    public void setMealTypes(Set<MealType> mealTypes) {
+        this.mealTypes = mealTypes;
     }
 
     public boolean isFavorite() {

@@ -3,12 +3,13 @@ package swf.army.mil.cookbook2.recipe;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 @Service
 public class RecipeService {
 
-    Recipe test = new Recipe("Taco", "Tortillas and meat", true);
-    Recipe test2 = new Recipe("Soup", "Chicken Noodle", false);
+    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), true);
+    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), false);
 
     private ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 

@@ -1,12 +1,12 @@
 package swf.army.mil.cookbook2.recipe;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -28,8 +28,8 @@ public class RecipeService {
         return recipeRepository.save(recipe);
     }
 
-    public ArrayList<Recipe> getAll(){
-        return recipes;
+    public List<Recipe> getAll(){
+        return recipeRepository.findAll();
     }
 
     public Recipe getRecipeById(){

@@ -87,12 +87,12 @@ public class Recipe{
         this.rating = rating;
     }
 
-    public Integer getTimeMade() {
+    public Integer getTimesMade() {
         return timesMade;
     }
 
-    public void setTimeMade(Integer timeMade) {
-        this.timesMade = timeMade;
+    public void setTimesMade(Integer timesMade) {
+        this.timesMade = timesMade;
     }
 
     public Instant getLastChange() {

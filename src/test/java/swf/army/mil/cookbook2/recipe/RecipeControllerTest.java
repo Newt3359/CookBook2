@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.hasItems;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -66,6 +65,9 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$.title").value("Taco"))
                 .andExpect(jsonPath("$.ingredients").value("Tortillas and meat"))
                 .andExpect(jsonPath("$.mealTypes", hasItems("Lunch", "Dinner")))
+                .andExpect(jsonPath("$.rating").value(4.5))
+                .andExpect(jsonPath("$.timesMade"). value(10))
+//                .andExpect(jsonPath("$.lastChange").value(time))
                 .andExpect(jsonPath("$.favorite").value(true));
     }
 

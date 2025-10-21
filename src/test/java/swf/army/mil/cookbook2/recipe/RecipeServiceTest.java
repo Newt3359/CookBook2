@@ -57,4 +57,12 @@ class RecipeServiceTest {
         Recipe singleRecipe = recipeService.getRecipeById(1L);
         assertThat(singleRecipe).isEqualTo(test);
     }
+
+    @Test
+    void shouldUpdateAircraftById(){
+        when(recipeRepository.save(test)).thenReturn(test);
+
+        Recipe updatedRecipe = recipeService.updateById(1L,test);
+        assertThat(updatedRecipe).isEqualTo(test);
+    }
 }

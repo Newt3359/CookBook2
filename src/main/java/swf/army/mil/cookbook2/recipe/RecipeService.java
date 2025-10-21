@@ -36,6 +36,15 @@ public class RecipeService {
         return recipeRepository.findById(id).orElse(null);
     }
 
+    public Recipe updateById(Long id, Recipe recipe){
+        Recipe existingRecipe = recipeRepository.findById(id).orElse(null);
+        if (existingRecipe == null){
+            System.out.println("Recipe not found");
+        }
+        recipe.setId(id);
+        return recipeRepository.save(recipe);
+    }
+
     public void deleteRecipe(Long id){
 
     }

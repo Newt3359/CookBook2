@@ -1,5 +1,4 @@
 package swf.army.mil.cookbook2.recipe;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,7 +30,7 @@ class RecipeServiceTest {
     Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), 3.2, 2, time, false);
 
     @Test
-    void shouldSaveAircraft(){
+    void shouldSaveRecipe(){
         when(recipeRepository.save(test)).thenReturn(test);
 
         Recipe acutalRecipe = recipeService.saveRecipe(test);

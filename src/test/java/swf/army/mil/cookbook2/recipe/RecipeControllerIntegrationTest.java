@@ -1,7 +1,6 @@
 package swf.army.mil.cookbook2.recipe;
-
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,12 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Set;
-
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,6 +41,7 @@ public class RecipeControllerIntegrationTest {
     Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), 3.2, 2, time, false);
 
     @Test
+    @Transactional
     public void shouldCreateRecipe() throws Exception{
         String testJson = mapper.writeValueAsString(test);
 
@@ -60,6 +58,7 @@ public class RecipeControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void shouldCreateRecipePart2()throws Exception{
         String testJson = mapper.writeValueAsString(test2);
 
@@ -76,6 +75,7 @@ public class RecipeControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void shouldGetAllRecipes()throws Exception{
         recipeRepository.save(test);
         recipeRepository.save(test2);
@@ -87,5 +87,14 @@ public class RecipeControllerIntegrationTest {
                 .andExpect(jsonPath("$[1].title").value("Soup"))
                 .andExpect(jsonPath("$[0].mealTypes", hasItems("Lunch", "Dinner")))
                 .andExpect(jsonPath("$[1].mealTypes", hasItems("Lunch", "Dinner")));
+    }
+
+    @Test
+    @Transactional
+    public void shouldGetRecipeById() throws Exception{
+        Recipe savedRecipe = recipeRepository.save(test);
+        mvc.perform(get("/api/recipe/" +savedRecipe.getId()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("Taco"));
     }
 }

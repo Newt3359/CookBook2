@@ -1,4 +1,5 @@
 import {Navigation} from "../Components/Navigation.tsx";
+import {AddRecipeForm} from "../Components/AddRecipeForm.tsx";
 
 
 export function AddRecipe(){
@@ -8,6 +9,7 @@ export function AddRecipe(){
         <>
             <Navigation/>
             <h1>Add</h1>
+            <AddRecipeForm/>
         </>
     )
 }

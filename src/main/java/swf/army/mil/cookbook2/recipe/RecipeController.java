@@ -1,6 +1,8 @@
 package swf.army.mil.cookbook2.recipe;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -30,7 +32,12 @@ public class RecipeController {
         return recipeService.getAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/random")
+    public List<Recipe> getNumberOfRandom(){
+        return recipeService.getNumberOfRandom(3);
+    }
+
+    @GetMapping("/single/{id}")
     public Recipe getByID(@PathVariable Long id){
         return recipeService.getRecipeById(id);
     }
@@ -49,6 +56,16 @@ public class RecipeController {
     public ResponseEntity<Void> deleteRecipe(@PathVariable Long id){
         recipeService.deleteRecipe(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public List<Recipe> searchAllTextRelatedFields(@RequestParam String query){
+        List<Recipe> results = new ArrayList<>();
+
+        results.addAll(recipeService.searchRecipeByTitleKeyword(query));
+        results.addAll(recipeService.searchRecipeByIngredientsKeyword(query));
+
+        return results.stream().distinct().toList();
     }
 
 }

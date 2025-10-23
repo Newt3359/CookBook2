@@ -1,13 +1,15 @@
 package swf.army.mil.cookbook2.recipe;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class RecipeService {
@@ -31,6 +33,32 @@ public class RecipeService {
     public List<Recipe> getAll(){
         return recipeRepository.findAll();
     }
+
+    public List<Recipe> getNumberOfRandom(int count) {
+        long totalEntries = recipeRepository.count();
+
+        if (count <= 0 || totalEntries == 0) {
+            return Collections.emptyList();
+        }
+
+        if (totalEntries <= count) {
+            return recipeRepository.findAll();
+        }
+
+        List<Long> allIds = new ArrayList<>(
+                recipeRepository.findAll()
+                        .stream()
+                        .map(Recipe::getId)
+                        .toList()
+        );
+
+        Collections.shuffle(allIds);
+
+        List<Long> selectedIds = new ArrayList<>(allIds.subList(0, count));
+
+        return recipeRepository.findAllById(selectedIds);
+    }
+
 
     public Recipe getRecipeById(Long id){
         return recipeRepository.findById(id).orElse(null);
@@ -83,5 +111,13 @@ public class RecipeService {
             System.out.println("not found");
         }
         recipeRepository.deleteById(id);
+    }
+
+    public List<Recipe> searchRecipeByTitleKeyword(String query){
+        return recipeRepository.findDistinctByTitleContainingIgnoreCase(query);
+    }
+
+    public List<Recipe> searchRecipeByIngredientsKeyword(String query){
+        return recipeRepository.findDistinctByIngredientsContainingIgnoreCase(query);
     }
 }

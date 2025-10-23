@@ -36,7 +36,9 @@ export function AddRecipeForm(){
         const recipeData ={
             title: title,
             ingredients: ingredients,
-            mealType: mealType,
+            mealTypes: mealType
+                .filter(m => m.isChecked)
+                .map(m => m.name),
             rating: rating,
             timesMade: 0,
             lastChange: Date.now(),
@@ -58,7 +60,8 @@ export function AddRecipeForm(){
         try {
             const response = await axios.post('http://localhost:8080/api/recipe', recipeData)
             console.log("New recipe sent", response.data);
-            if (response.status === 201){
+            console.log(response.status)
+            if (response.status === 200){
                 console.log("success")
                 handleReset()
             }

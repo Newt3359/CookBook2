@@ -14,7 +14,7 @@ describe("Splash page tests", () => {
 
     it('should display nav bar', () => {
         render(<MemoryRouter><SplashPage/></MemoryRouter>)
-        expect(screen.getByTestId("navbar"))
+        expect(screen.getByTestId("navbar")).toBeInTheDocument()
     });
 
     it('should have a home button', () => {

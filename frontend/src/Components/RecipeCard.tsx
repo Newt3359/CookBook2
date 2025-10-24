@@ -9,7 +9,7 @@ interface RecipeCardProps{
 export function RecipeCard({searchResults}:RecipeCardProps){
 
     const [data, setData] = useState<Recipe[]>([]);
-
+    const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null)
     const maxStars = 5;
 
 useEffect(() => {
@@ -75,7 +75,7 @@ useEffect(() => {
                                 </div>
 
                                 <div>
-                                    <button type={"button"} className={"border-2 bg-orange-200 hover:bg-orange-300"}>Expand</button>
+                                    <button type={"button"} className={"border-2 bg-orange-200 hover:bg-orange-300"} onClick={() => setSelectedRecipe(recipe)}>Expand</button>
                                 </div>
                             </div>
                         </div>
@@ -84,6 +84,57 @@ useEffect(() => {
                     <p className="w-full text-center mt-4">No results found</p>
                 )}
             </div>
+            {selectedRecipe && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6 relative">
+                        <button
+                            type="button"
+                            className="absolute top-3 right-3 text-gray-600 hover:text-black text-xl"
+                            onClick={() => setSelectedRecipe(null)}
+                        >
+                            ✕
+                        </button>
+
+                        <h2 className="text-2xl font-bold mb-3">{selectedRecipe.title}</h2>
+
+                        <p className="text-gray-700 mb-2">
+                            <strong>Meal Type:</strong> {selectedRecipe.mealTypes?.join(", ")}
+                        </p>
+                        <p className="text-gray-700 mb-2">
+                            <strong>Favorite:</strong> {selectedRecipe.favorite ? "Yes" : "No"}
+                        </p>
+                        <p className="text-gray-700 mb-4 whitespace-pre-line">
+                            <strong>Ingredients:</strong> <br /> {selectedRecipe.ingredients}
+                        </p>
+
+                        <div className="flex items-center mb-3">
+                            <span className="mr-2 font-semibold">Rating:</span>
+                            {[...Array(maxStars)].map((_, index) => {
+                                const currentRating = index + 1;
+                                return (
+                                    <Star
+                                        key={index}
+                                        size={24}
+                                        fill={
+                                            currentRating <= selectedRecipe.rating
+                                                ? "#ffc107"
+                                                : "#e4e5e9"
+                                        }
+                                        style={{ marginRight: "2px" }}
+                                    />
+                                );
+                            })}
+                        </div>
+
+                            <p><strong>Times Made:</strong> {selectedRecipe.timesMade}</p>
+                        <div className={'flex justify-center content-center'}>
+                            <button type={"button"} className={"bg-orange-200 hover:bg-orange-300 border-2 m-1"}>Make Recipe</button>
+                            <button type={"button"} className={"bg-orange-200 hover:bg-orange-300 border-2 m-1"}>Edit Recipe</button>
+                            <button type={"button"} className={"bg-orange-200 hover:bg-orange-300 border-2 m-1"}>Delete Recipe</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 }

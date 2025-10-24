@@ -57,13 +57,6 @@ class RecipeServiceTest {
         assertThat(singleRecipe).isEqualTo(test);
     }
 
-    @Test
-    void shouldUpdateRecipeById(){
-        when(recipeRepository.save(test)).thenReturn(test);
-
-        Recipe updatedRecipe = recipeService.updateById(1L,test);
-        assertThat(updatedRecipe).isEqualTo(test);
-    }
 
     @Test
     void shouldPartiallyUpdateRecipe(){

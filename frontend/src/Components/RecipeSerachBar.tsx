@@ -1,9 +1,9 @@
 import {type ChangeEvent, useState} from "react";
-import axios, {type AxiosResponse} from "axios";
-import type {Recipe} from "../Utils/Recipe.ts";
+import axios from "axios";
+
 
 interface RecipeSearchBarProps {
-    setSearchResults: (recipes: AxiosResponse<Recipe>) => void;
+    setSearchResults: (recipes: any[]) => void;
 }
 
 export function RecipeSearchBar({setSearchResults}:RecipeSearchBarProps){
@@ -19,13 +19,15 @@ export function RecipeSearchBar({setSearchResults}:RecipeSearchBarProps){
 
 
             const response = await axios.get(`http://localhost:8080/api/recipe/search?query=${searchQuery}`)
-            if (response.status === 204) {
+            if (response.data.length === 0) {
                 console.log("No results found")
+                setSearchResults([])
             } else {
                 setSearchResults(response.data)
             }
         }catch (err){
             console.log("error fetching results", err)
+            setSearchResults([])
         }
     }
 
@@ -34,6 +36,7 @@ export function RecipeSearchBar({setSearchResults}:RecipeSearchBarProps){
             <label className="mr-3">
                 Search:
                 <input
+                    name={"Search"}
                     className={"border border-black"}
                     type="text"
                     placeholder="Search by title, description, or ingredients"

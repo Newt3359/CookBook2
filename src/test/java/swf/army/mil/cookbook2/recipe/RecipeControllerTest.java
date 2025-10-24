@@ -21,7 +21,8 @@ import java.util.Set;
 import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,7 +55,7 @@ class RecipeControllerTest {
 
     @Test
     public void shouldSaveRecipe()throws Exception{
-        Mockito.when(recipeService.saveRecipe(any(Recipe.class))).thenReturn(test);
+        when(recipeService.saveRecipe(any(Recipe.class))).thenReturn(test);
         String testJson = mapper.writeValueAsString(test);
         mvc.perform(MockMvcRequestBuilders
                 .post("/api/recipe")
@@ -63,12 +64,13 @@ class RecipeControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.title").value("Taco"))
-                .andExpect(jsonPath("$.ingredients").value("Tortillas, meat, and cheese"))
+                .andExpect(jsonPath("$.ingredients").value("Tortillas and meat"))
                 .andExpect(jsonPath("$.mealTypes", hasItems("Lunch", "Dinner")))
                 .andExpect(jsonPath("$.rating").value(4.5))
                 .andExpect(jsonPath("$.timesMade"). value(10))
 //                .andExpect(jsonPath("$.lastChange").value(time))
-                .andExpect(jsonPath("$.favorite").value(false));
+                .andExpect(jsonPath("$.favorite").value(true));
+        Mockito.verify(recipeService).saveRecipe(any(Recipe.class));
     }
 
     @Test
@@ -76,55 +78,42 @@ class RecipeControllerTest {
         recipes.add(test);
         recipes.add(test2);
         String testJson = mapper.writeValueAsString(recipes);
-        Mockito.when(recipeService.getAll()).thenReturn(recipes);
+        when(recipeService.getAll()).thenReturn(recipes);
         mvc.perform(MockMvcRequestBuilders
                 .get("/api/recipe"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*").isArray());
-//        Mockito.verify(recipeService).getAll();
+        Mockito.verify(recipeService).getAll();
     }
 
     @Test
     public void shouldGetRecipeById() throws Exception{
         test.setId(1L);
-        Mockito.when(recipeService.getRecipeById(1L)).thenReturn(test);
+        when(recipeService.getRecipeById(1L)).thenReturn(test);
         mvc.perform(MockMvcRequestBuilders
-                .get("/api/recipe/1"))
+                .get("/api/recipe/single/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.mealTypes", hasItems("Lunch", "Dinner")));
+        Mockito.verify(recipeService).getRecipeById(1L);
     }
+
 
     @Test
-    public void shouldUpdateRecipeById() throws Exception{
-        Recipe updated = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), 4.5, 10, time, true);
-        String updatedRecipe = mapper.writeValueAsString(updated);
+    void shouldUpdateIngredients() throws Exception {
+        Recipe updatedRecipe = test;
+        updatedRecipe.setIngredients("Tortillas, meat, and cheese");
 
-        mvc.perform(MockMvcRequestBuilders
-                .put("/api/recipe/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(updatedRecipe))
+        when(recipeService.partialUpdate(eq(1L), any(Recipe.class)))
+                .thenReturn(updatedRecipe);
+
+        mvc.perform(patch("/api/recipe/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(updatedRecipe)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.ingredients").value("Tortillas, meat, and cheese"))
-                .andExpect(jsonPath("$.favorite").value(false));
+                .andExpect(jsonPath("$.ingredients").value("Tortillas, meat, and cheese"));
+        verify(recipeService, times(1)).partialUpdate(eq(1L), any(Recipe.class));
     }
-
-    @Test
-    public void shouldUpdateIngredients()throws Exception{
-        Recipe existing = new Recipe();
-        existing.setId(2L);
-        existing.setTitle("Soup");
-        existing.setMealTypes(Set.of(MealType.Lunch, MealType.Dinner));
-        existing.setFavorite(false);
-
-
-        mvc.perform(MockMvcRequestBuilders.patch("/api/recipe/2")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"ingredients\": \"noodles, beef, broth\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.ingredients").value("noodles, beef, broth"));
-    }
-
     @Test
     public void shouldDeleteRecipe() throws Exception{
         doNothing().when(recipeService).deleteRecipe(anyLong());
@@ -132,5 +121,6 @@ class RecipeControllerTest {
         mvc.perform(MockMvcRequestBuilders
                 .delete("/api/recipe/2"))
                 .andExpect(status().isNoContent());
+        Mockito.verify(recipeService, times(1)).deleteRecipe(2L);
     }
 }

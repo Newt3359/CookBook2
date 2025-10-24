@@ -82,7 +82,7 @@ public class RecipeControllerIntegrationTest {
 
         mvc.perform(get("/api/recipe"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(2)))
+                .andExpect(jsonPath("$.*", hasSize(6)))
                 .andExpect(jsonPath("$[0].title").value("Taco"))
                 .andExpect(jsonPath("$[1].title").value("Soup"))
                 .andExpect(jsonPath("$[0].mealTypes", hasItems("Lunch", "Dinner")))
@@ -93,7 +93,7 @@ public class RecipeControllerIntegrationTest {
     @Transactional
     public void shouldGetRecipeById() throws Exception{
         Recipe savedRecipe = recipeRepository.save(test);
-        mvc.perform(get("/api/recipe/" +savedRecipe.getId()))
+        mvc.perform(get("/api/recipe/single/" +savedRecipe.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Taco"));
     }

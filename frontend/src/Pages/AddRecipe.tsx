@@ -10,7 +10,7 @@ export function AddRecipe(){
             <Navigation/>
             <h1 className={"flex justify-center content-center text-2xl"}>Add Recipe</h1>
             <div className={"flex justify-center content-center"}>
-                <div className={"flex justify-center content-center border-2 max-w-200 p-5"}>
+                <div className={"flex justify-center content-center border-2 max-w-250 p-5"}>
                     <AddRecipeForm/>
                 </div>
             </div>

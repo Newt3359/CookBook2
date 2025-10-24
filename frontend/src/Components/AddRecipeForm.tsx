@@ -106,7 +106,7 @@ export function AddRecipeForm(){
                 <label htmlFor={"ingredients"}>Ingredients:</label>
                 <div>
                     <textarea
-                    className={"placeholder:text-gray-400 placeholder:font-light border-1 ml-1 w-100 h-50"}
+                    className={"placeholder:text-gray-400 placeholder:font-light border-1 ml-1 w-full h-32"}
                     id={"ingredients"}
                     name={"ingredients"}
                     // placeholder={"tortilla, meat, cheese"}
@@ -169,9 +169,9 @@ export function AddRecipeForm(){
                 </fieldset>
             </div>
 
-            <div>
-                <button type={"submit"} className={"bg-orange-200 border-2 shadow-md ml-2 mr-2 mt-2 hover:bg-orange-300"}>Submit</button>
-                <button type="reset" className={"bg-orange-200 border-2 shadow-md hover:bg-orange-300"}>Reset</button>
+            <div className={'flex justify-center content-center'}>
+                <button type={"submit"} className={"bg-orange-200 border-2 shadow-md hover:bg-orange-300 m-2 pl-0.5 pr-0.5"}>Submit</button>
+                <button type="reset" className={"bg-orange-200 border-2 shadow-md hover:bg-orange-300 m-2 pl-0.5 pr-0.5"}>Reset</button>
             </div>
         </form>
         </>

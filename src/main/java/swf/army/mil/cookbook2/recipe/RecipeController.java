@@ -42,11 +42,6 @@ public class RecipeController {
         return recipeService.getRecipeById(id);
     }
 
-    @PutMapping("/{id}")
-    public Recipe UpdateById(@PathVariable Long id, @RequestBody Recipe recipe){
-       return recipeService.updateById(id,recipe);
-    }
-
     @PatchMapping("/{id}")
     public Recipe partialUpdate (@PathVariable Long id, @RequestBody Recipe recipe){
         return recipeService.partialUpdate(id,recipe);

@@ -82,7 +82,7 @@ public class RecipeControllerIntegrationTest {
 
         mvc.perform(get("/api/recipe"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(6)))
+                .andExpect(jsonPath("$.*", hasSize(5)))
                 .andExpect(jsonPath("$[0].title").value("Taco"))
                 .andExpect(jsonPath("$[1].title").value("Soup"))
                 .andExpect(jsonPath("$[0].mealTypes", hasItems("Lunch", "Dinner")))

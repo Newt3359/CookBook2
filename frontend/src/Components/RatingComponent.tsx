@@ -42,6 +42,6 @@ export function RatingComponent({
             })}
         </div>
     );
-};
+}
 
 

@@ -28,8 +28,6 @@ public class Recipe{
 
     private Double rating;
 
-    private Integer timesMade;
-
     private Instant lastChange;
 
     private Boolean favorite;
@@ -37,12 +35,11 @@ public class Recipe{
     public Recipe() {
     }
 
-    public Recipe(String title, String ingredients, Set<MealType> mealTypes, Double rating, Integer timesMade, Instant lastChange, Boolean favorite) {
+    public Recipe(String title, String ingredients, Set<MealType> mealTypes, Double rating, Instant lastChange, Boolean favorite) {
         this.title = title;
         this.ingredients = ingredients;
         this.mealTypes = mealTypes;
         this.rating = rating;
-        this.timesMade = timesMade;
         this.lastChange = lastChange;
         this.favorite = favorite;
     }
@@ -85,14 +82,6 @@ public class Recipe{
 
     public void setRating(Double rating) {
         this.rating = rating;
-    }
-
-    public Integer getTimesMade() {
-        return timesMade;
-    }
-
-    public void setTimesMade(Integer timesMade) {
-        this.timesMade = timesMade;
     }
 
     public Instant getLastChange() {

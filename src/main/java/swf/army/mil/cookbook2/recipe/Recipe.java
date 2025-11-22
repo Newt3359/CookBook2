@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.Set;
 
 @Entity
-public class Recipe{
+public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +16,8 @@ public class Recipe{
 
     private String ingredients;
 
+    private String directions;
+
 
     @ElementCollection(targetClass = MealType.class)
     @Enumerated(EnumType.STRING)
@@ -23,7 +25,7 @@ public class Recipe{
             name = "recipe_meal_types",
             joinColumns = @JoinColumn(name = "recipe_id")
     )
-    @Column (name = "meal_type")
+    @Column(name = "meal_type")
     private Set<MealType> mealTypes;
 
     private Double rating;
@@ -35,12 +37,20 @@ public class Recipe{
     public Recipe() {
     }
 
-    public Recipe(String title, String ingredients, Set<MealType> mealTypes, Double rating, Instant lastChange, Boolean favorite) {
+    public Recipe(Long id, String title, String ingredients, String directions, Set<MealType> mealTypes, Double rating, Instant lastChange, Boolean favorite) {
+        this.id = id;
         this.title = title;
         this.ingredients = ingredients;
+        this.directions = directions;
         this.mealTypes = mealTypes;
         this.rating = rating;
         this.lastChange = lastChange;
+        this.favorite = favorite;
+    }
+
+    public Recipe(String title, Double rating, Boolean favorite) {
+        this.title = title;
+        this.rating = rating;
         this.favorite = favorite;
     }
 
@@ -68,6 +78,14 @@ public class Recipe{
         this.ingredients = ingredients;
     }
 
+    public String getDirections() {
+        return directions;
+    }
+
+    public void setDirections(String directions) {
+        this.directions = directions;
+    }
+
     public Set<MealType> getMealTypes() {
         return mealTypes;
     }
@@ -92,7 +110,7 @@ public class Recipe{
         this.lastChange = lastChange;
     }
 
-    public boolean isFavorite() {
+    public Boolean getFavorite() {
         return favorite;
     }
 

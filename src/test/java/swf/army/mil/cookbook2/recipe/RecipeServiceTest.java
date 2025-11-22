@@ -26,8 +26,8 @@ class RecipeServiceTest {
 
     private List<Recipe> recipes = new ArrayList<Recipe>();
     Instant time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
-    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), 4.5, time, true);
-    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), 3.2, time, false);
+    Recipe test = new Recipe("taco", 2.2, true);
+    Recipe test2 = new Recipe("soup", 1.2, false);
 
     @Test
     void shouldSaveRecipe(){
@@ -61,7 +61,7 @@ class RecipeServiceTest {
     @Test
     void shouldPartiallyUpdateRecipe(){
         Recipe existing = test;
-        Recipe updated = new Recipe(null,"new ingredients", null, null, null, null);
+        Recipe updated = new Recipe(null,"new ingredients", "stuff", "stuff", null, null, null, null);
 
         when(recipeRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(recipeRepository.save(existing)).thenReturn(existing);

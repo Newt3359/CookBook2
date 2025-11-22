@@ -37,8 +37,8 @@ public class RecipeControllerIntegrationTest {
     RecipeRepository recipeRepository;
 
     Instant time = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
-    Recipe test = new Recipe("Taco", "Tortillas and meat", Set.of(MealType.Lunch, MealType.Dinner), 4.5,  time, true);
-    Recipe test2 = new Recipe("Soup", "Chicken Noodle", Set.of(MealType.Lunch, MealType.Dinner), 3.2,  time, false);
+    Recipe test = new Recipe("taco", 2.2, true);
+    Recipe test2 = new Recipe("soup", 1.2, false);
 
     @Test
     @Transactional

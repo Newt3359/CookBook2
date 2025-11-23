@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.util.Set;
 
 public record RecipeDto(
+        Long id,
         String title,
         String ingredients,
         String directions,

@@ -10,6 +10,7 @@ export function AddRecipeForm(){
 
     const [title, setTitle] = useState("")
     const [ingredients, setIngredients] = useState("")
+    const [directions, setDirections] = useState("")
     const [mealType, setMealType] = useState([
         {id: 1, name: "Breakfast", isChecked: false},
         {id: 2, name: "Lunch", isChecked: false},
@@ -36,6 +37,7 @@ export function AddRecipeForm(){
         const recipeData ={
             title: title,
             ingredients: ingredients,
+            directions: directions,
             mealTypes: mealType
                 .filter(m => m.isChecked)
                 .map(m => m.name),
@@ -46,6 +48,11 @@ export function AddRecipeForm(){
         };
 
         const atLeastOneSelected = mealType.some(m => m.isChecked);
+
+        if (directions === ""){
+            alert("Directions cannot be blank")
+            return;
+        }
 
         if (!atLeastOneSelected) {
             alert("Please select at least one meal type.");
@@ -73,6 +80,7 @@ export function AddRecipeForm(){
     const handleReset = () => {
         setTitle("")
         setIngredients("")
+        setDirections("")
         setMealType([
             {id: 1, name: "Breakfast", isChecked: false},
             {id: 2, name: "Lunch", isChecked: false},
@@ -109,9 +117,21 @@ export function AddRecipeForm(){
                     className={"placeholder:text-gray-400 placeholder:font-light border-1 ml-1 w-full h-32"}
                     id={"ingredients"}
                     name={"ingredients"}
-                    // placeholder={"tortilla, meat, cheese"}
                     value={ingredients}
                     onChange={(e) => setIngredients(e.target.value)}
+                    />
+                </div>
+            </div>
+
+            <div>
+                <label htmlFor={"directions"}>Directions:</label>
+                <div>
+                    <textarea
+                    className={"placeholder:text-gray-400 placeholder:font-light border-1 ml-1 w-full h-32"}
+                    id={"directions"}
+                    name={"directions"}
+                    value={directions}
+                    onChange={(e) => setDirections(e.target.value)}
                     />
                 </div>
             </div>

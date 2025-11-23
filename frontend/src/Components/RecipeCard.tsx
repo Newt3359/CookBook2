@@ -3,6 +3,7 @@ import axios from "axios";
 import type {Recipe} from "../Utils/Recipe.ts";
 import {Star} from "lucide-react";
 import {RatingComponent} from "./RatingComponent.tsx";
+import {deleteRecipeCall, getAllRecipesCall} from "../Utils/Client.ts";
 
 
 
@@ -24,17 +25,9 @@ export function RecipeCard({searchResults}:RecipeCardProps){
         setSelectedRecipe((prev) => (prev ? { ...prev, [field]: value } : prev));
     };
 
-    const handleDelete = (id: number | undefined) => {
-        const recipeId = selectedRecipe?.id
+    const handleDelete = async (id: number | undefined) => {
         setData(prev => prev.filter(selectedRecipe => selectedRecipe?.id !== id))
-
-           axios.delete(`http://localhost:8080/api/recipe/${recipeId}`)
-               .then(response => {
-                   console.log(response.status)
-               })
-               .catch(error => {
-                   console.log(error)
-               })
+        await deleteRecipeCall(selectedRecipe?.id)
     }
 
     const handleCheckboxChange = (mealType: Recipe["mealTypes"][number]) => {
@@ -52,17 +45,23 @@ export function RecipeCard({searchResults}:RecipeCardProps){
 
     useEffect(() => {
         if (searchResults.length === 0) {
-            const fetchData = async () => {
-                try {
-                    const response = await axios.get('http://localhost:8080/api/recipe/random');
-                    console.log(response.data)
-                    setData(response.data);
-                } catch (err) {
-                    console.log(err);
-                }
-            };
 
-            fetchData();
+            //remove if line after comment works once everything is downloaded
+
+            // const fetchData = async () => {
+            //     try {
+            //         const response = await axios.get('http://localhost:8080/api/recipe/random');
+            //         console.log(response.data)
+            //         setData(response.data);
+            //     } catch (err) {
+            //         console.log(err);
+            //     }
+            // };
+            //
+            // fetchData();
+
+            const results = getAllRecipesCall()
+            setData(results)
 
         }
     }, [searchResults]);

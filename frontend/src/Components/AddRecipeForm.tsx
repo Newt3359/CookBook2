@@ -3,6 +3,7 @@ import axios from "axios";
 import * as React from "react";
 import {RatingComponent} from "./RatingComponent.tsx";
 import {checkNewRecipeSubmission} from "../Utils/FormChecker.ts";
+import {createRecipeCall} from "../Utils/Client.ts";
 
 
 
@@ -50,17 +51,9 @@ export function AddRecipeForm(){
 
         checkNewRecipeSubmission(recipeData)
 
-
-        try {
-            const response = await axios.post('http://localhost:8080/api/recipe', recipeData)
-            console.log("New recipe sent", response.data);
-            console.log(response.status)
-            if (response.status === 200){
-                console.log("success")
-                handleReset()
-            }
-        }catch (error){
-            console.log("Failed to send", error)
+        const submission = await createRecipeCall(recipeData)
+        if (submission.value === 200) {
+            handleReset()
         }
     }
 

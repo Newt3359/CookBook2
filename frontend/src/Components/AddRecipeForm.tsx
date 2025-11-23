@@ -2,6 +2,7 @@ import {useState} from "react";
 import axios from "axios";
 import * as React from "react";
 import {RatingComponent} from "./RatingComponent.tsx";
+import {checkNewRecipeSubmission} from "../Utils/FormChecker.ts";
 
 
 
@@ -35,6 +36,7 @@ export function AddRecipeForm(){
         event.preventDefault();
 
         const recipeData ={
+            // id:0,
             title: title,
             ingredients: ingredients,
             directions: directions,
@@ -42,27 +44,12 @@ export function AddRecipeForm(){
                 .filter(m => m.isChecked)
                 .map(m => m.name),
             rating: rating,
-            timesMade: 0,
             lastChange: Date.now(),
             favorite: favorite
         };
 
-        const atLeastOneSelected = mealType.some(m => m.isChecked);
+        checkNewRecipeSubmission(recipeData)
 
-        if (directions === ""){
-            alert("Directions cannot be blank")
-            return;
-        }
-
-        if (!atLeastOneSelected) {
-            alert("Please select at least one meal type.");
-            return;
-        }
-
-        if (rating === 0){
-            alert("At least 1 Star is required")
-            return;
-        }
 
         try {
             const response = await axios.post('http://localhost:8080/api/recipe', recipeData)

@@ -19,7 +19,7 @@ export function RatingComponent({
         <div className={"flex mt-1"}>
             <h5>Rating:</h5>
             {[...Array(maxRating)].map((_, index) => {
-                const currentRating = index + 1;
+                const currentRating = index + .5;
                 return (
                     <label key={index}>
                         <input
@@ -32,7 +32,6 @@ export function RatingComponent({
                         <Star
                             className="star"
                             size={30}
-                            // color={currentRating <= (hover || rating) ? '#ffc107' : '#e4e5e9'}
                             fill={currentRating <= (hover || rating) ? '#ffc107' : '#e4e5e9'}
                             onMouseEnter={() => setHover(currentRating)}
                             onMouseLeave={() => setHover(0)}

@@ -24,7 +24,7 @@ export function RecipeCard({searchResults}:RecipeCardProps){
         setSelectedRecipe((prev) => (prev ? { ...prev, [field]: value } : prev));
     };
 
-    const handleDelete = (id : number) => {
+    const handleDelete = (id: number | undefined) => {
         const recipeId = selectedRecipe?.id
         setData(prev => prev.filter(selectedRecipe => selectedRecipe?.id !== id))
 
@@ -50,18 +50,6 @@ export function RecipeCard({searchResults}:RecipeCardProps){
         );
     };
 
-    const handleMakeRecipe = async (id: number) => {
-        try {
-            // @ts-ignore
-            const patchData = { timesMade: selectedRecipe.timesMade + 1};
-            const response = await axios.patch(`http://localhost:8080/api/recipe/${id}`, patchData);
-            setSelectedRecipe(response.data);
-        } catch (error) {
-            console.error("Error updating recipe:", error);
-        }
-
-    };
-
     useEffect(() => {
         if (searchResults.length === 0) {
             const fetchData = async () => {
@@ -75,6 +63,7 @@ export function RecipeCard({searchResults}:RecipeCardProps){
             };
 
             fetchData();
+
         }
     }, [searchResults]);
 
@@ -176,9 +165,7 @@ export function RecipeCard({searchResults}:RecipeCardProps){
                             })}
                         </div>
 
-                            <p><strong>Times Made:</strong> {selectedRecipe.timesMade}</p>
                         <div className={'flex justify-center content-center'}>
-                            <button type={"button"} className={"bg-orange-200 hover:bg-orange-300 border-2 m-1"} onClick={() => handleMakeRecipe(selectedRecipe?.id)}>Make Recipe</button>
                             <button type={"button"} className={"bg-orange-200 hover:bg-orange-300 border-2 m-1"} onClick={() => setIsEditing(true)}>Edit Recipe</button>
                             <button type={"button"} className={"bg-orange-200 hover:bg-orange-300 border-2 m-1"} onClick={() => handleDelete(selectedRecipe?.id)}>Delete Recipe</button>
                         </div>
@@ -196,16 +183,11 @@ export function RecipeCard({searchResults}:RecipeCardProps){
                             ✕
                         </button>
 
-                        {/*<h2 className="text-2xl font-bold mb-3">{selectedRecipe.title}</h2>*/}
                         <label className={"mr-1"}>Title:</label>
                         <input
                         value={selectedRecipe.title}
                         onChange={(e) => handleFieldChange("title", e.target.value)}
                         />
-
-                        {/*<p className="text-gray-700 mb-2">*/}
-                        {/*    <strong>Meal Type:</strong> {selectedRecipe.mealTypes?.join(", ")}*/}
-                        {/*</p>*/}
 
                         <label className={"mr-1"}>Meal Type: </label>
                         <div className="inline-flex m-0.5 gap-1">
@@ -236,7 +218,6 @@ export function RecipeCard({searchResults}:RecipeCardProps){
                             <RatingComponent rating={selectedRecipe.rating} setRating={(value) => handleFieldChange("rating", value)}/>
                         </div>
 
-                        <p><strong>Times Made:</strong> {selectedRecipe.timesMade}</p>
                         <div className={'flex justify-center content-center'}>
                             <button type={"button"} className={"bg-orange-200 hover:bg-orange-300 border-2 m-1"} onClick={() => setIsEditing(false)}>Cancel</button>
                             <button type={"button"} className={"bg-orange-200 hover:bg-orange-300 border-2 m-1"}>Save</button>

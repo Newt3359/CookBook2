@@ -1,4 +1,4 @@
-import type {Recipe} from "./Recipe.ts";
+import type {Recipe} from "../types/Recipe.ts";
 
 export const MockRecipeDB:Recipe[] = [
     {

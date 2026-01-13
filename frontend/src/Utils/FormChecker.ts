@@ -1,9 +1,8 @@
-import type {Recipe} from "./Recipe.ts";
+import type {Recipe} from "../types/Recipe.ts";
 
-export function checkNewRecipeSubmission(recipe){
+export function checkNewRecipeSubmission(recipe: Recipe){
 
 
-    const atLeastOneSelected = recipe.mealTypes
 
     if (recipe.title === ""){
         alert("Title cannot be blank")
@@ -17,11 +16,6 @@ export function checkNewRecipeSubmission(recipe){
 
     if (recipe.directions === ""){
         alert("Directions cannot be blank")
-        return;
-    }
-
-    if (atLeastOneSelected === []) {
-        alert("Please select at least one meal type.");
         return;
     }
 

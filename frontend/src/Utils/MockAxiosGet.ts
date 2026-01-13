@@ -1,5 +1,5 @@
 import axios from "axios";
-import { vi } from "vitest";
+import { vi, beforeEach } from "vitest";
 
 
 // Mock axios globally

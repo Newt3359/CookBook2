@@ -1,4 +1,4 @@
-package swf.army.mil.cookbook2.recipe;
+package swf.army.mil.cookbook2.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

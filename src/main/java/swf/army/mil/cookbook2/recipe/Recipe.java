@@ -1,43 +1,60 @@
 package swf.army.mil.cookbook2.recipe;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import swf.army.mil.cookbook2.mealtype.MealType;
+import swf.army.mil.cookbook2.image.Image;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
+@Table(name = "recipe")
 public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "recipe_id")
     private Long id;
 
+    @Column(name = "recipe_title")
     private String title;
 
+    @Column(name = "recipe_ingredients")
     private String ingredients;
 
+    @Column(name = "recipe_directions")
     private String directions;
 
 
-    @ElementCollection(targetClass = MealType.class)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(
-            name = "recipe_meal_types",
-            joinColumns = @JoinColumn(name = "recipe_id")
+    @ManyToMany
+    @JoinTable(
+        name = "meal_type_mapping_table",
+        joinColumns = @JoinColumn(name = "recipe_fk_id"),
+        inverseJoinColumns = @JoinColumn(name = "meal_type_id")
     )
-    @Column(name = "meal_type")
-    private Set<MealType> mealTypes;
+    private Set<MealType> mealTypes = new HashSet<>();
 
+    @Column(name = "recipe_rating")
     private Double rating;
 
+    @Column(name = "recipe_last_change")
     private Instant lastChange;
 
+    @Column(name = "recipe_favorite")
     private Boolean favorite;
+
+    @Nullable
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 
     public Recipe() {
     }
 
-    public Recipe(Long id, String title, String ingredients, String directions, Set<MealType> mealTypes, Double rating, Instant lastChange, Boolean favorite) {
+    public Recipe(Long id, String title, String ingredients, String directions, Set<MealType> mealTypes, Double rating, Instant lastChange, Boolean favorite, List<Image> images) {
         this.id = id;
         this.title = title;
         this.ingredients = ingredients;
@@ -46,6 +63,7 @@ public class Recipe {
         this.rating = rating;
         this.lastChange = lastChange;
         this.favorite = favorite;
+        this.images = images;
     }
 
     public Recipe(String title, Double rating, Boolean favorite) {
@@ -116,5 +134,13 @@ public class Recipe {
 
     public void setFavorite(Boolean favorite) {
         this.favorite = favorite;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 }

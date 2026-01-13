@@ -1,142 +1,193 @@
-import {useState} from "react";
-import axios from "axios";
 import * as React from "react";
+import {useEffect} from "react";
+import {createRecipeCall} from "../clients/RecipeClient.ts";
+import {ImageUpload} from "./ImageUpload.tsx";
+import {useRecipe} from "../providers/RecipeProvider.tsx"
+import {MealTypes, type Recipe} from "../types/Recipe.ts";
+import {uploadImage} from "../clients/ImageClient.ts";
 import {RatingComponent} from "./RatingComponent.tsx";
-import {checkNewRecipeSubmission} from "../Utils/FormChecker.ts";
-import {createRecipeCall} from "../Utils/Client.ts";
+
+interface AddRecipeFormProps{
+    handleNewRecipe: () => void;
+    recipeToEdit?: Recipe | null;
+    onSave?: () => void;
+}
 
 
+export const AddRecipeForm = ({handleNewRecipe, recipeToEdit, onSave}: AddRecipeFormProps) => {
 
+    const {recipe, setRecipe} = useRecipe();
+    const [selectedFile, setSelectedFile] = React.useState<File>();
+    const [previewImage, setPreviewImage] = React.useState<string>();
 
-export function AddRecipeForm(){
-
-    const [title, setTitle] = useState("")
-    const [ingredients, setIngredients] = useState("")
-    const [directions, setDirections] = useState("")
-    const [mealType, setMealType] = useState([
-        {id: 1, name: "Breakfast", isChecked: false},
-        {id: 2, name: "Lunch", isChecked: false},
-        {id: 3, name: "Dinner", isChecked: false},
-        {id: 4, name: "Dessert", isChecked: false}
-    ])
-    const [rating, setRating] = useState(0)
-    const [favorite, setFavorite] = useState(false)
-
-
-    const handleOptionChange = () => {
-        setFavorite(!favorite)
-    }
-
-    const handleCheckboxChange = (id: number) => {
-        setMealType(prevMealType =>
-            prevMealType.map(mealType =>
-                mealType.id === id ? {...mealType, isChecked: !mealType.isChecked} : mealType))
-    }
+    useEffect(() => {
+        if (recipeToEdit){
+            setRecipe(recipeToEdit)
+        }else {
+            setRecipe({
+                id:0,
+                title: "",
+                ingredients: "",
+                directions: "",
+                mealTypes: [],
+                rating: 0,
+                favorite: false
+            })
+        }
+    }, [recipeToEdit])
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        const recipeData ={
-            // id:0,
-            title: title,
-            ingredients: ingredients,
-            directions: directions,
-            mealTypes: mealType
-                .filter(m => m.isChecked)
-                .map(m => m.name),
-            rating: rating,
-            lastChange: Date.now(),
-            favorite: favorite
-        };
-
-        checkNewRecipeSubmission(recipeData)
-
-        const submission = await createRecipeCall(recipeData)
-        if (submission.value === 200) {
-            handleReset()
+        const payload ={
+            ...recipe
         }
+        console.log(payload)
+
+        try {
+            const createdRecipe = await createRecipeCall(payload)
+
+            if (selectedFile){
+                const formData = new FormData();
+                formData.append("file", selectedFile);
+                formData.append("recipeId", createdRecipe.id.toString());
+
+                await uploadImage(formData)
+            }
+            setRecipe(createdRecipe)
+            alert("recipe created successfully");
+            if (onSave) onSave();
+        }catch (err : any){
+            console.error("error creating recipe", err);
+            alert("failed to save recipe")
+        }
+
+        setRecipe({
+            id:0,
+            title: "",
+            ingredients: "",
+            directions: "",
+            mealTypes: [],
+            rating: 0,
+            favorite: false
+        })
     }
 
-    const handleReset = () => {
-        setTitle("")
-        setIngredients("")
-        setDirections("")
-        setMealType([
-            {id: 1, name: "Breakfast", isChecked: false},
-            {id: 2, name: "Lunch", isChecked: false},
-            {id: 3, name: "Dinner", isChecked: false},
-            {id: 4, name: "Dessert", isChecked: false}
-        ])
-        setRating(0)
+    const handleMealTypes = (mealLabel: string) => {
+        const mealObject = MealTypes.find
+        ((m) => m.name === mealLabel);
+        if (!mealObject) return;
+
+        const alreadySelected = recipe.mealTypes.some(
+            (m) => m.name === mealLabel)
+
+        const updatedMealTypes = alreadySelected
+        ? recipe.mealTypes.filter((m) => m.name !== mealLabel)
+        :[...recipe.mealTypes, mealObject];
+
+        setRecipe({...recipe, mealTypes: updatedMealTypes})
     }
 
+    const handleOptionChange = () => {
+
+    }
 
     return(
 
         <>
-        <form onSubmit={handleSubmit} onReset={handleReset}>
-            <div className={"mt-1"}>
-                <label htmlFor={"title"}>Title:</label>
-                <div>
+            <div className="bg-white flex justify-center content-center border-2 shadow-md z-50 items-center fixed">
+            <form onSubmit={handleSubmit}>
+            <div>
+                <ImageUpload
+                    selectedFile={selectedFile}
+                    setSelectedFile={setSelectedFile}
+                    previewImage={previewImage}
+                    setPreviewImage={setPreviewImage}
+                />
+            </div>
+
+            <div className={"mt-3"}>
+                <label className="m-1">
+                    Title:
                     <input
-                        className={"placeholder:text-gray-400 placeholder:font-light border-1 ml-1"}
-                        id={"title"}
-                        type={"text"}
-                        name={"title"}
-                        placeholder={"taco"}
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        className="placeholder:text-gray-400 placeholder:font-light border-1 ml-0.5"
+                        type="text"
+                        value={recipe.title}
+                        onChange={(e) =>
+                            setRecipe({ ...recipe, title: e.target.value })
+                        }
                     />
-                </div>
+                </label>
             </div>
 
-            <div className={"mt-1"}>
-                <label htmlFor={"ingredients"}>Ingredients:</label>
-                <div>
+
+            <div className={"mt-3"}>
+                <label className="m-1">
+                    Ingredients:
                     <textarea
-                    className={"placeholder:text-gray-400 placeholder:font-light border-1 ml-1 w-full h-32"}
-                    id={"ingredients"}
-                    name={"ingredients"}
-                    value={ingredients}
-                    onChange={(e) => setIngredients(e.target.value)}
+                        className="placeholder:text-gray-400 placeholder:font-light border-1 ml-0.5"
+                        value={recipe.ingredients}
+                        onChange={(e) =>
+                            setRecipe({ ...recipe, ingredients: e.target.value })
+                        }
                     />
-                </div>
+                </label>
+            </div>
+
+            <div className={"mt-3"}>
+                <label className="m-1">
+                    Directions:
+                    <textarea
+                    className="placeholder:text-gray-400 placeholder:font-light border-1 ml-0.5"
+                    value={recipe.directions}
+                    onChange={(e) =>
+                        setRecipe({...recipe, directions: e.target.value})
+                    }
+                    />
+                </label>
             </div>
 
             <div>
-                <label htmlFor={"directions"}>Directions:</label>
-                <div>
-                    <textarea
-                    className={"placeholder:text-gray-400 placeholder:font-light border-1 ml-1 w-full h-32"}
-                    id={"directions"}
-                    name={"directions"}
-                    value={directions}
-                    onChange={(e) => setDirections(e.target.value)}
-                    />
-                </div>
-            </div>
-
-            <div className={"border-2 w-70 mt-3 ml-0.5"}>
-                <h5>Meal Type:</h5>
-                <div className={"inline-flex m-0.5 gap-1"}>
-                    {mealType.map(mealType => (
-                        <div key={mealType.id}>
-                            <label htmlFor={`checkbox-${mealType.id}`} className={"mr-0.5"}>{mealType.name}:</label>
+                <label>
+                    Meal Type:
+                    {MealTypes.map((meal) => (
+                        <label key={meal.id}>
                             <input
-                                type="checkbox"
-                                id={`checkbox-${mealType.id}`}
-                                checked={mealType.isChecked}
-                                onChange={() => handleCheckboxChange(mealType.id)}
+                            type={"checkbox"}
+                            checked={recipe.mealTypes.some
+                            ((m) => m.name === meal.name)}
+                            onChange={() => handleMealTypes(meal.name)}
+                            className={"m-1"}
                             />
-                        </div>
+                            {meal.name}
+                        </label>
                     ))}
-                </div>
+                </label>
             </div>
+        <div>
 
-            <div>
-                <RatingComponent rating={rating} setRating={setRating}/>
-            </div>
 
+        <div>
+            <label>
+                Rating:
+                <input
+                    className="border-1 m-0.5"
+                    value={recipe.rating}
+                    onChange={(e) =>
+                        setRecipe({
+                            ...recipe,
+                            rating: Number(e.target.value),
+                        })
+                    }
+                    type="number"
+                    min={0}
+                    max={5}
+                    step={0.01}
+                />
+            </label>
+        </div>
+
+        </div>
             <div>
                 <fieldset className={"inline-flex"}>
                     <h5 className={"mr-0.5 ml-0.5"}>Favorite:</h5>
@@ -146,8 +197,7 @@ export function AddRecipeForm(){
                                     <input
                                         type="radio"
                                         name="favorite"
-                                        value="true"
-                                        checked={favorite}
+                                        checked={recipe.favorite}
                                         onChange={handleOptionChange}
                                     />
                                 </label>
@@ -158,8 +208,7 @@ export function AddRecipeForm(){
                                     <input
                                         type="radio"
                                         name="favorite"
-                                        value="false"
-                                        checked={!favorite}
+                                        checked={!recipe.favorite}
                                         onChange={handleOptionChange}
                                     />
                                 </label>
@@ -170,10 +219,33 @@ export function AddRecipeForm(){
             </div>
 
             <div className={'flex justify-center content-center'}>
-                <button type={"submit"} className={"bg-orange-200 border-2 shadow-md hover:bg-orange-300 m-2 pl-0.5 pr-0.5"}>Submit</button>
-                <button type="reset" className={"bg-orange-200 border-2 shadow-md hover:bg-orange-300 m-2 pl-0.5 pr-0.5"}>Reset</button>
+                <button
+                type={"button"}
+                onClick={handleNewRecipe}
+                >
+                Close
+                </button>
+
+                {recipeToEdit == null && (
+                <button
+                className={"bg-orange-200 border-2 shadow-md hover:bg-orange-300 m-2 pl-0.5 pr-0.5"}
+                type={"submit"}
+                >
+                Submit
+                </button>
+                )}
+
+                {/*{recipeToEdit != null && (*/}
+                {/*    <button*/}
+                {/*    type={"button"}*/}
+                {/*    onClick={handleEditRecipe}*/}
+                {/*    >*/}
+                {/*    </button>*/}
+                {/*)}*/}
+
             </div>
         </form>
+        </div>
         </>
     )
 }

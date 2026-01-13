@@ -1,6 +1,6 @@
-package swf.army.mil.cookbook2.DTOs;
+package swf.army.mil.cookbook2.dto;
 
-import swf.army.mil.cookbook2.recipe.MealType;
+import swf.army.mil.cookbook2.mealtype.EMealTypes;
 
 import java.time.Instant;
 import java.util.Set;
@@ -10,7 +10,7 @@ public record RecipeDto(
         String title,
         String ingredients,
         String directions,
-        Set<MealType> mealTypes,
+        Set<EMealTypes> mealTypes,
         Double rating,
         Instant lastChange,
         Boolean favorite

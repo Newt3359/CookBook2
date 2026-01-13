@@ -1,6 +1,7 @@
 package swf.army.mil.cookbook2.recipe;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import swf.army.mil.cookbook2.image.ImageService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,11 @@ public class RecipeController {
 
     private final RecipeService recipeService;
 
-    public RecipeController(RecipeService recipeService){
+    private final ImageService imageService;
+
+    public RecipeController(RecipeService recipeService, ImageService imageService) {
         this.recipeService = recipeService;
+        this.imageService = imageService;
     }
 
     @PostMapping
@@ -44,7 +48,7 @@ public class RecipeController {
 
     @PatchMapping("/{id}")
     public Recipe partialUpdate (@PathVariable Long id, @RequestBody Recipe recipe){
-        return recipeService.partialUpdate(id,recipe);
+        return (recipeService.partialUpdate(id,recipe));
     }
 
     @DeleteMapping("/{id}")

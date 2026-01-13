@@ -1,13 +1,8 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
-import type {Recipe} from "../Utils/Recipe.ts";
+import {MealTypes, type Recipe} from "../types/Recipe.ts";
 import {Star} from "lucide-react";
 import {RatingComponent} from "./RatingComponent.tsx";
-import {deleteRecipeCall, getAllRecipesCall} from "../Utils/Client.ts";
-
-
-
-
+import {deleteRecipeCall, getAllRecipesCall} from "../clients/RecipeClient.ts";
 
 interface RecipeCardProps{
     searchResults: Recipe[];
@@ -19,8 +14,6 @@ export function RecipeCard({searchResults}:RecipeCardProps){
     const maxStars = 5;
     const [isEditing, setIsEditing] = useState(false);
 
-    const MEAL_TYPE_OPTIONS: Recipe["mealTypes"] = ["Breakfast", "Lunch", "Dinner", "Dessert"];
-
     const handleFieldChange = (field: keyof Recipe, value: Recipe[keyof Recipe]) => {
         setSelectedRecipe((prev) => (prev ? { ...prev, [field]: value } : prev));
     };
@@ -30,41 +23,28 @@ export function RecipeCard({searchResults}:RecipeCardProps){
         await deleteRecipeCall(selectedRecipe?.id)
     }
 
-    const handleCheckboxChange = (mealType: Recipe["mealTypes"][number]) => {
-        setSelectedRecipe(prev =>
-            prev
-                ? {
-                    ...prev,
-                    mealTypes: prev.mealTypes.includes(mealType)
-                        ? prev.mealTypes.filter(m => m !== mealType)
-                        : [...prev.mealTypes, mealType],
-                }
-                : prev
-        );
-    };
+   const handleCheckboxChange = (meal: RecipeMeal) => {
+       setSelectedRecipe(prev =>
+           prev
+               ? {
+                     ...prev,
+                     mealTypes: prev.mealTypes.some(m => m.mealType === meal.name)
+                         ? prev.mealTypes.filter(m => m.mealType !== meal.name)
+                         : [...prev, { mealId: meal.id, mealType: meal.name }],
+                 }
+               : prev
+       );
+   };
 
-    useEffect(() => {
-        if (searchResults.length === 0) {
-
-            //remove if line after comment works once everything is downloaded
-
-            // const fetchData = async () => {
-            //     try {
-            //         const response = await axios.get('http://localhost:8080/api/recipe/random');
-            //         console.log(response.data)
-            //         setData(response.data);
-            //     } catch (err) {
-            //         console.log(err);
-            //     }
-            // };
-            //
-            // fetchData();
-
-            const results = getAllRecipesCall()
-            setData(results)
-
-        }
-    }, [searchResults]);
+   useEffect(() => {
+       if (searchResults.length === 0) {
+           const load = async () => {
+               const results = await getAllRecipesCall();
+               setData(results);
+           };
+           load();
+       }
+   }, [searchResults]);
 
     const recipesToShow = searchResults.length > 0 ? searchResults : data;
 
@@ -88,8 +68,7 @@ export function RecipeCard({searchResults}:RecipeCardProps){
                                 <div>
                                     <h2 className="text-xl font-bold mb-2">{recipe.title}</h2>
                                     <p className="text-gray-600">
-                                        Meal Type: {recipe.mealTypes?.join(", ")}
-                                    </p>
+                                    Meal Type: {recipe.mealTypes.map(m => m.mealType).join(", ")}                                    </p>
                                 </div>
                                 <div className={"flex"}>
                                     <p>
@@ -136,7 +115,9 @@ export function RecipeCard({searchResults}:RecipeCardProps){
                         <h2 className="text-2xl font-bold mb-3">{selectedRecipe.title}</h2>
 
                         <p className="text-gray-700 mb-2">
-                            <strong>Meal Type:</strong> {selectedRecipe.mealTypes?.join(", ")}
+                            {Array.isArray(selectedRecipe.mealTypes)
+                                ? selectedRecipe.mealTypes.map(m => m.mealType).join(", ")
+                                : ""}
                         </p>
                         <p className="text-gray-700 mb-2">
                             <strong>Favorite:</strong> {selectedRecipe.favorite ? "Yes" : "No"}
@@ -190,16 +171,16 @@ export function RecipeCard({searchResults}:RecipeCardProps){
 
                         <label className={"mr-1"}>Meal Type: </label>
                         <div className="inline-flex m-0.5 gap-1">
-                            {MEAL_TYPE_OPTIONS.map((mealType) => (
-                                <div key={mealType}>
-                                    <label htmlFor={`checkbox-${mealType}`} className="mr-0.5">
-                                        {mealType}:
+                            {MealTypes.map((m) => (
+                                <div key={m.id}>
+                                    <label htmlFor={`checkbox-${m.name}`} className="mr-0.5">
+                                        {m.name}:
                                     </label>
                                     <input
                                         type="checkbox"
-                                        id={`checkbox-${mealType}`}
-                                        checked={selectedRecipe?.mealTypes.includes(mealType) ?? false}
-                                        onChange={() => handleCheckboxChange(mealType)}
+                                        id={`checkbox-${m.id}`}
+                                        checked={selectedRecipe.mealTypes.some(mt => mt.mealType === m.name)}
+                                        onChange={() => handleCheckboxChange(m)}
                                     />
                                 </div>
                             ))}

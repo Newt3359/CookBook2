@@ -61,7 +61,7 @@ class RecipeServiceTest {
     @Test
     void shouldPartiallyUpdateRecipe(){
         Recipe existing = test;
-        Recipe updated = new Recipe(null,"new ingredients", "stuff", "stuff", null, null, null, null);
+        Recipe updated = new Recipe(null,"food", "new ingredients", "stuff", null, null, null, null,null);
 
         when(recipeRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(recipeRepository.save(existing)).thenReturn(existing);

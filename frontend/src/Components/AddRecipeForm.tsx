@@ -5,7 +5,6 @@ import {ImageUpload} from "./ImageUpload.tsx";
 import {useRecipe} from "../providers/RecipeProvider.tsx"
 import {MealTypes, type Recipe} from "../types/Recipe.ts";
 import {uploadImage} from "../clients/ImageClient.ts";
-import {RatingComponent} from "./RatingComponent.tsx";
 
 interface AddRecipeFormProps{
     handleNewRecipe: () => void;
@@ -150,18 +149,16 @@ export const AddRecipeForm = ({handleNewRecipe, recipeToEdit, onSave}: AddRecipe
             <div>
                 <label>
                     Meal Type:
-                    {MealTypes.map((meal) => (
-                        <label key={meal.id}>
-                            <input
-                            type={"checkbox"}
-                            checked={recipe.mealTypes.some
-                            ((m) => m.name === meal.name)}
-                            onChange={() => handleMealTypes(meal.name)}
-                            className={"m-1"}
-                            />
-                            {meal.name}
-                        </label>
-                    ))}
+                    {MealTypes.map((meal) => <label key={meal.id}>
+                        <input
+                        type={"checkbox"}
+                        checked={recipe.mealTypes.some
+                        ((m) => m.id === meal.id)}
+                        onChange={() => handleMealTypes(meal.name)}
+                        className={"m-1"}
+                        />
+                        {meal.name}
+                    </label>)}
                 </label>
             </div>
         <div>

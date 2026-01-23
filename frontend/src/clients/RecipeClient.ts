@@ -28,3 +28,12 @@ export const getAllRecipesCall = async (): Promise<Recipe[]> => {
         return []; // 👈 CRITICAL
     }
 };
+
+export const updateRecipe = async (recipe:Recipe) => {
+    const response = await axios.patch(
+        `http://localhost:8080/api/recipe/${recipe.id}`,
+        recipe
+    )
+    console.log(response.data)
+    return response.data
+}

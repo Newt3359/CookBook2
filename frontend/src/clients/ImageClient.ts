@@ -1,10 +1,8 @@
 import axios from "axios";
 import type {RecipeImage} from "../types/RecipeImage.ts";
 
-export const uploadImage = (formData: FormData) => {
-    return axios.post(`/api/image`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-    });
+export const uploadImage = (id: number,formData: FormData) => {
+    return axios.post(`http://localhost:8080/api/image/${id}`, formData);
 };
 
 type APIRecipeImage = {
@@ -17,7 +15,6 @@ export const getImagesByRecipeId = async (id: number | undefined): Promise<Recip
     try {
         const response = await axios.get<APIRecipeImage[]>(`/api/image/${id}`);
 
-        // Map API response to your RecipeImage type
         return response.data.map((img) => ({
             id: img.imageId,
             url: img.imgUrl,

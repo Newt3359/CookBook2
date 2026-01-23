@@ -3,12 +3,14 @@ package swf.army.mil.cookbook2.image;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import swf.army.mil.cookbook2.recipe.Recipe;
 import swf.army.mil.cookbook2.recipe.RecipeRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Service
@@ -26,19 +28,31 @@ public class ImageService {
         this.recipeRepository = recipeRepository;
     }
 
-    public Image saveImage(MultipartFile file, Long recipeId) throws IOException {
+    public Image saveImage(MultipartFile file, Long id) throws IOException {
         String fileName = file.getOriginalFilename();
-        Path path = Paths.get(uploadDir, fileName);
-        Files.copy(file.getInputStream(), path);
+        if (fileName == null || fileName.isBlank()) {
+            throw new RuntimeException("Invalid file name");
+        }
 
-        Image image= new Image();
+        Path dirPath = Paths.get(uploadDir);
+        Files.createDirectories(dirPath);
+
+        Path filePath = dirPath.resolve(fileName);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Recipe not found: " + id));
+
+        Image image = new Image();
         image.setImgUrl("/upload/" + fileName);
-        image.setRecipe(recipeRepository.getRecipesById(recipeId));
+        image.setRecipe(recipe);
 
         return imageRepository.save(image);
     }
 
+
     public List<Image> getImagesByRecipeId(Long id){
+        System.out.println(id);
         return imageRepository.findImagesByRecipe_Id(id);
     }
 

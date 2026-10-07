@@ -21,11 +21,18 @@ public class ImageController {
         this.recipeService = recipeService;
     }
 
-    @PostMapping
-    public ResponseEntity<Image> saveImage(@RequestParam("file") MultipartFile file, @RequestParam("widgetId") Long recipeId) {
+    @PostMapping({"/{id}"})
+    public ResponseEntity<Image> saveImage(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
+        System.out.println("saveImage called with recipe ID: " + id);
+        System.out.println("Received file: " + file);
+        if (file != null) {
+            System.out.println("File name: " + file.getOriginalFilename());
+            System.out.println("File size: " + file.getSize());
+        }
+
         try {
 
-            Image saved = imageService.saveImage(file, recipeId);
+            Image saved = imageService.saveImage(file, id);
             return ResponseEntity.ok().body(saved);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -34,6 +41,7 @@ public class ImageController {
 
     @GetMapping("/{id}")
     public ResponseEntity<List<Image>> getImagesByRecipeId(@PathVariable Long id){
+        System.out.println(id);
         return ResponseEntity.ok().body(imageService.getImagesByRecipeId(id));
     }
 

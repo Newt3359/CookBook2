@@ -5,7 +5,7 @@ import {ImageUpload} from "./ImageUpload.tsx";
 import {useRecipe} from "../providers/RecipeProvider.tsx"
 import {MealTypes, type Recipe} from "../types/Recipe.ts";
 import {uploadImage} from "../clients/ImageClient.ts";
-import {RatingComponent} from "./RatingComponent.tsx";
+import type {RecipeMeal} from "../types/RecipeMeal.ts";
 
 interface AddRecipeFormProps{
     handleNewRecipe: () => void;
@@ -25,7 +25,6 @@ export const AddRecipeForm = ({handleNewRecipe, recipeToEdit, onSave}: AddRecipe
             setRecipe(recipeToEdit)
         }else {
             setRecipe({
-                id:0,
                 title: "",
                 ingredients: "",
                 directions: "",
@@ -46,50 +45,41 @@ export const AddRecipeForm = ({handleNewRecipe, recipeToEdit, onSave}: AddRecipe
 
         try {
             const createdRecipe = await createRecipeCall(payload)
-
+            const newRecipeId = createdRecipe.id;
+            console.log(selectedFile)
             if (selectedFile){
                 const formData = new FormData();
                 formData.append("file", selectedFile);
-                formData.append("recipeId", createdRecipe.id.toString());
-
-                await uploadImage(formData)
+                await uploadImage(newRecipeId,formData)
             }
-            setRecipe(createdRecipe)
             alert("recipe created successfully");
             if (onSave) onSave();
+
         }catch (err : any){
             console.error("error creating recipe", err);
             alert("failed to save recipe")
         }
 
-        setRecipe({
-            id:0,
-            title: "",
-            ingredients: "",
-            directions: "",
-            mealTypes: [],
-            rating: 0,
-            favorite: false
-        })
     }
 
-    const handleMealTypes = (mealLabel: string) => {
-        const mealObject = MealTypes.find
-        ((m) => m.name === mealLabel);
-        if (!mealObject) return;
-
+    const handleMealTypes = (mealOfTheDay: RecipeMeal) => {
         const alreadySelected = recipe.mealTypes.some(
-            (m) => m.name === mealLabel)
+            m => m.mealId === mealOfTheDay.mealId);
 
         const updatedMealTypes = alreadySelected
-        ? recipe.mealTypes.filter((m) => m.name !== mealLabel)
-        :[...recipe.mealTypes, mealObject];
+        ? recipe.mealTypes.filter((m) => m !== mealOfTheDay)
+        :[...recipe.mealTypes, mealOfTheDay];
+
+        if(updatedMealTypes.length === 0) return;
 
         setRecipe({...recipe, mealTypes: updatedMealTypes})
     }
 
-    const handleOptionChange = () => {
-
+    const handleOptionChange = (favorite:boolean) => {
+        setRecipe({
+            ...recipe,
+            favorite: favorite,
+        });
     }
 
     return(
@@ -150,18 +140,15 @@ export const AddRecipeForm = ({handleNewRecipe, recipeToEdit, onSave}: AddRecipe
             <div>
                 <label>
                     Meal Type:
-                    {MealTypes.map((meal) => (
-                        <label key={meal.id}>
-                            <input
-                            type={"checkbox"}
-                            checked={recipe.mealTypes.some
-                            ((m) => m.name === meal.name)}
-                            onChange={() => handleMealTypes(meal.name)}
-                            className={"m-1"}
-                            />
-                            {meal.name}
-                        </label>
-                    ))}
+                    {MealTypes.map((m) => <label key={m.id}>
+                        <input
+                        type={"checkbox"}
+                        checked={recipe.mealTypes.some(mt => mt.mealId == m.id)}
+                        onChange={() => handleMealTypes({mealId: m.id, mealType: m.name})}
+                        className={"m-1"}
+                        />
+                        {m.name}
+                    </label>)}
                 </label>
             </div>
         <div>
@@ -198,7 +185,7 @@ export const AddRecipeForm = ({handleNewRecipe, recipeToEdit, onSave}: AddRecipe
                                         type="radio"
                                         name="favorite"
                                         checked={recipe.favorite}
-                                        onChange={handleOptionChange}
+                                        onChange={() => handleOptionChange(true)}
                                     />
                                 </label>
                             </div>
@@ -209,7 +196,7 @@ export const AddRecipeForm = ({handleNewRecipe, recipeToEdit, onSave}: AddRecipe
                                         type="radio"
                                         name="favorite"
                                         checked={!recipe.favorite}
-                                        onChange={handleOptionChange}
+                                        onChange={() => handleOptionChange(false)}
                                     />
                                 </label>
                             </div>
@@ -234,15 +221,6 @@ export const AddRecipeForm = ({handleNewRecipe, recipeToEdit, onSave}: AddRecipe
                 Submit
                 </button>
                 )}
-
-                {/*{recipeToEdit != null && (*/}
-                {/*    <button*/}
-                {/*    type={"button"}*/}
-                {/*    onClick={handleEditRecipe}*/}
-                {/*    >*/}
-                {/*    </button>*/}
-                {/*)}*/}
-
             </div>
         </form>
         </div>

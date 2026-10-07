@@ -1,11 +1,12 @@
-export const MealTypes = [
-    {id: 1, name: "BREAKFAST", isChecked: false},
-    {id: 2, name: "LUNCH", isChecked: false},
-    {id: 3, name: "DINNER", isChecked: false},
-    {id: 4, name: "DESSERT", isChecked: false}
-] as const;
+import {type RecipeImage, sampleImages} from "./RecipeImage.ts";
+import type {RecipeMeal} from "./RecipeMeal.ts";
 
-export type RecipeMeal = (typeof MealTypes)[number]
+export const MealTypes = [
+    {id: 1, name: "BREAKFAST"},
+    {id: 2, name: "LUNCH"},
+    {id: 3, name: "DINNER"},
+    {id: 4, name: "DESSERT"}
+] as const;
 
 export type Recipe = {
     id?: number,
@@ -15,5 +16,20 @@ export type Recipe = {
     mealTypes: RecipeMeal[],
     rating: number,
     lastChange?: Date,
-    favorite: boolean
+    favorite: boolean,
+    images?: RecipeImage[];
+}
+
+export const sampleRecipe = {
+    id:1,
+    title: "taco",
+    ingredients: "meat and tortilla",
+    directions: "make it",
+    mealTypes: [
+        {mealId: 1, mealType: "LUNCH" as const},
+        {mealId: 2, mealType: "DINNER" as const}
+    ],
+    rating: 4.2,
+    favorite: false,
+    images: sampleImages
 }

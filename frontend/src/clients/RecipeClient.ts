@@ -8,7 +8,7 @@ export const createRecipeCall = async (recipe:Recipe):Promise<Recipe> => {
 }
 
 export const deleteRecipeCall = async (id: number | undefined) => {
-    axios.delete(`http://localhost:8080/api/recipe/${id}`)
+    axios.delete(`/api/recipe/${id}`)
         .then(response => {
             console.log(response.status)
         })
@@ -20,11 +20,20 @@ export const deleteRecipeCall = async (id: number | undefined) => {
 export const getAllRecipesCall = async (): Promise<Recipe[]> => {
     try {
         const response = await axios.get<Recipe[]>(
-            "http://localhost:8080/api/recipe/random"
+            "/api/recipe/random"
         );
         return response.data;
     } catch (err) {
         console.error(err);
-        return []; // 👈 CRITICAL
+        return [];
     }
 };
+
+export const updateRecipe = async (recipe:Recipe) => {
+    const response = await axios.patch(
+        `/api/recipe/${recipe.id}`,
+        recipe
+    )
+    console.log(response.data)
+    return response.data
+}

@@ -113,7 +113,8 @@ export function RecipeCard({searchResults}:RecipeCardProps){
                         </button>
 
                         <h2 className="text-2xl font-bold mb-3">{selectedRecipe.title}</h2>
-
+                        <img src={`http://localhost:8080${selectedRecipe.images[0].imgUrl}`}
+                             alt={selectedRecipe.title}/>
                         <p className="text-gray-700 mb-2">
                             {Array.isArray(selectedRecipe.mealTypes)
                                 ? selectedRecipe.mealTypes.map(m => m.mealType).join(", ")
